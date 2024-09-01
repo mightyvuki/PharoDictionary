@@ -12,7 +12,7 @@ ITDictionary >> addWord: word meaning: meaning [
     "This method adds a word and its meaning to the dictionary."
 
     (words includesKey: word)
-        ifTrue: [ "Handle synonyms here later" ]
+        ifTrue: [ "Here we can display synonyms in the future" ]
         ifFalse: [ words at: word put: meaning ].
 ]
 
