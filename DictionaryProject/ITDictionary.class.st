@@ -18,10 +18,11 @@ ITDictionary >> addWord: word meaning: meaning [
 
 { #category : #accessing }
 ITDictionary >> initialize [
-    "Initialize the dictionary to hold words and their meanings."
+    "Initialize the dictionary to hold words and their meanings, and load data from a file."
     
     super initialize.
     words := Dictionary new.
+    "self loadFromFile: 'defaultDictionary.txt'."
 ]
 
 { #category : #accessing }
@@ -61,35 +62,19 @@ ITDictionary >> loadFromFile: fileName [
 
 { #category : #accessing }
 ITDictionary >> saveToFile: fileName [
-    "Save the dictionary to a  .txt file formatted [word : meaning]"
+    "Save the dictionary to a .txt file where each line contains a word and its meaning separated by a colon."
 
-    | file |
-    file := File newFileNamed: fileName.
-    file nextPutAll: [ words associationsDo: [ :assoc |
-        file nextPutAll: assoc key; nextPutAll: ' : '; nextPutAll: assoc value; cr.
-    ] ].
-    file close.
+    | fileStream |
+    fileStream := fileName asFileReference writeStream.
+    words associationsDo: [ :assoc |
+        fileStream nextPutAll: assoc key; nextPutAll: ' : '; nextPutAll: assoc value; cr.
+    ].
+    fileStream close.
 ]
 
-{ #category : #accessing }
+{ #category : #searching }
 ITDictionary >> search: word [
     "Return the meaning of the given word if it exists in the dictionary. Otherwise, return 'Word not found'."
     
     ^ words at: word ifAbsent: [ 'Word not found' ].
-]
-
-{ #category : #accessing }
-ITDictionary >> searchWord: word [
-    "Search for the meaning of a word in the dictionary. Returns the meaning if found, otherwise logs a message and returns nil."
-
-    | meaning |
-    meaning := words at: word ifAbsent: [
-        Transcript
-            nextPutAll: 'The word: ';
-            nextPutAll: word;
-            nextPutAll: ' is not found in the dictionary.';
-            cr.
-        nil
-    ].
-    ^meaning
 ]
